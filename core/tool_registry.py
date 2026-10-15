@@ -1,26 +1,28 @@
 from typing import Dict, Optional
+
 from tools.base_tool import BaseTool
 
+
 class ToolRegistry:
-    """
-    Nơi đăng ký và chứa danh sách các công cụ.
-    """
+    """Registry for tools available to an agent."""
+
     def __init__(self):
         self.tools: Dict[str, BaseTool] = {}
 
-    def register(self, tool: BaseTool):
+    def register(self, tool: BaseTool) -> None:
         self.tools[tool.name] = tool
 
     def get_tool_descriptions(self) -> str:
-        """
-        Tạo danh sách mô tả các tool để đưa vào prompt cho LLM.
-        """
         if not self.tools:
-            return "Không có tool nào."
-            
+            return "No tools registered."
+
         descriptions = []
         for name, tool in self.tools.items():
-            descriptions.append(f"- Tên: {name}\n  Mô tả: {tool.description}\n  Tham số: {tool.parameters}")
+            descriptions.append(
+                f"- Name: {name}\n"
+                f"  Description: {tool.description}\n"
+                f"  Parameters: {tool.parameters}"
+            )
         return "\n".join(descriptions)
 
     def get_tool(self, name: str) -> Optional[BaseTool]:
